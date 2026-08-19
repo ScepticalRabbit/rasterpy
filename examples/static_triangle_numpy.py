@@ -17,7 +17,7 @@ def make_scene() -> rasterpy.Scene:
     """Create a self-contained static triangle scene."""
     camera = rasterpy.Camera(
         pixels_num=np.array((128, 96)),
-        pixels_size=np.array((0.01, 0.01)),
+        pixels_size=np.array((0.0001, 0.0001)),
         pos_world=np.array((0.0, 0.0, 2.0)),
         rot_world=Rotation.identity(),
         roi_cent_world=np.zeros((3,)),
@@ -26,8 +26,8 @@ def make_scene() -> rasterpy.Scene:
     )
     mesh = rasterpy.Mesh(
         coords=np.array(
-            ((-0.5, -0.5, 0.0, 1.0), (0.0, 0.5, 0.0, 1.0),
-             (0.5, -0.5, 0.0, 1.0)),
+            ((-0.22, -0.16, 0.0, 1.0), (0.0, 0.16, 0.0, 1.0),
+             (0.22, -0.16, 0.0, 1.0)),
             dtype=np.float64,
         ),
         connectivity=np.array(((0, 2, 1),), dtype=np.uintp),

@@ -8,7 +8,7 @@ new DIC uncertainty-quantification workflows, use Riley through `pyvale`.
 ## Install
 
 ```shell
-uv sync --group dev
+uv pip install -e ".[dev]"
 ```
 
 This builds the Cython implementation in the active environment. The runtime
@@ -17,7 +17,7 @@ package requires NumPy, SciPy, and Pillow.
 ## Tests
 
 ```shell
-uv run pytest
+pytest
 ```
 
 The regression suite renders a tiny in-memory triangle scene through both
@@ -26,20 +26,18 @@ engines. It does not need MOOSE, Exodus, or any external data.
 ## Examples
 
 ```shell
-uv run python examples/static_triangle_numpy.py
-uv run python examples/static_triangle_cython.py
+python examples/static_triangle_numpy.py
+python examples/static_triangle_cython.py
 ```
 
-An optional historical example loads the bundled `case26_out.e` MOOSE Exodus
-result without running MOOSE:
+The bundled historical example loads `case26_out.e` without running MOOSE:
 
 ```shell
-uv sync --extra examples
-uv run python examples/exodus_case26_numpy.py
+python examples/ex_render_exodus.py
 ```
 
-The Exodus example uses pyvale only as an optional reader and surface-mesh
-converter. The rasteriser package itself has no pyvale runtime dependency.
+Pyvale is a runtime dependency and provides the Exodus reader and surface-mesh
+converter used by the example.
 
 ## API
 

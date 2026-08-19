@@ -16,9 +16,9 @@ def test_numpy_static_triangle_regression(triangle_scene) -> None:
     image = renderer.render(scene)
 
     assert image.shape == (24, 32)
-    assert np.count_nonzero(np.isfinite(image)) == 50
-    assert np.nanmax(image) == pytest.approx(0.95)
-    assert np.nanmin(image) == pytest.approx(0.05)
+    assert np.count_nonzero(np.isfinite(image)) == 216
+    assert np.nanmax(image) == pytest.approx(0.9791666666666666)
+    assert np.nanmin(image) == pytest.approx(0.020833333333333332)
 
 
 def test_numpy_scene_returns_one_image_stack_per_camera(triangle_scene) -> None:
@@ -30,4 +30,4 @@ def test_numpy_scene_returns_one_image_stack_per_camera(triangle_scene) -> None:
     assert images is not None
     assert len(images) == 1
     assert images[0].shape == (24, 32, 1, 1)
-    assert np.nanmax(images[0]) == pytest.approx(0.95)
+    assert np.nanmax(images[0]) == pytest.approx(0.9791666666666666)

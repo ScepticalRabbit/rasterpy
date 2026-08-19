@@ -24,8 +24,8 @@ def triangle_scene() -> tuple[rasterpy.Camera, rasterpy.Mesh, rasterpy.Scene]:
     )
     mesh = rasterpy.Mesh(
         coords=np.array(
-            ((-0.5, -0.5, 0.0, 1.0), (0.0, 0.5, 0.0, 1.0),
-             (0.5, -0.5, 0.0, 1.0)),
+            ((-1.2, -0.9, 0.0, 1.0), (0.0, 0.9, 0.0, 1.0),
+             (1.2, -0.9, 0.0, 1.0)),
             dtype=np.float64,
         ),
         connectivity=np.array(((0, 2, 1),), dtype=np.uintp),

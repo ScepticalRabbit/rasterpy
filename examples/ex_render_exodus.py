@@ -3,10 +3,10 @@
 # License: MIT
 # Copyright (C) 2026 Sceptical Rabbit (Lloyd Fletcher)
 # ============================================================================
-"""Render the bundled MOOSE Exodus case through the NumPy rasteriser.
+"""Render the bundled Exodus case through the NumPy rasteriser.
 
-This historical example requires ``pip install rasterpy[examples]``. It loads
-an Exodus result but does not run MOOSE.
+It loads an Exodus result through rasterpy's pyvale dependency but does not run
+MOOSE.  The camera is fitted automatically to the mesh, with a small border.
 """
 
 from pathlib import Path
@@ -37,13 +37,25 @@ def main() -> None:
         pyvale_mesh.fields_render,
         pyvale_mesh.fields_disp,
     )
+    pixels_num = np.array((512, 512))
+    pixels_size = np.array((0.00345, 0.00345))
+    focal_length = 15.0
+    rotation = Rotation.identity()
+    roi_cent_world, pos_world = rasterpy.CameraTools.pos_fill_frame(
+        mesh.coords,
+        pixels_num,
+        pixels_size,
+        focal_length,
+        rotation,
+        frame_fill=1.1,
+    )
     camera = rasterpy.Camera(
-        pixels_num=np.array((512, 512)),
-        pixels_size=np.array((0.00345, 0.00345)),
-        pos_world=np.array((0.0, 0.0, 500.0)),
-        rot_world=Rotation.identity(),
-        roi_cent_world=np.zeros((3,)),
-        focal_length=15.0,
+        pixels_num=pixels_num,
+        pixels_size=pixels_size,
+        pos_world=pos_world,
+        rot_world=rotation,
+        roi_cent_world=roi_cent_world,
+        focal_length=focal_length,
         sub_samp=1,
     )
     image = rasterpy.RasterNumpy(

@@ -6,6 +6,7 @@
 """Legacy NumPy and Cython scalar-field rasterisers for DIC studies."""
 
 from .camera import Camera, CameraData
+from .camera_tools import CameraTools
 from .cython_renderer import RasterCY
 from .image_tools import EImageType, ImageTools
 from .mesh import Mesh, RenderMesh
@@ -16,6 +17,7 @@ from .scene import RenderScene, Scene
 __all__ = [
     "Camera",
     "CameraData",
+    "CameraTools",
     "EImageType",
     "ImageTools",
     "Mesh",
