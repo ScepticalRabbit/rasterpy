@@ -595,7 +595,7 @@ def _raster_frame(coords: cython.double[:,:],
         for jj in range(num_bound_y):
 
             bound_coord_x = float(xi_min) + coord_offset
-            bound_ind_x: cython.size_t = sub_samp*xi_min
+            bound_ind_x = sub_samp*xi_min
 
             for ii in range(num_bound_x):
 
