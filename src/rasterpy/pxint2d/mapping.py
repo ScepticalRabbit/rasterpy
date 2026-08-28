@@ -20,12 +20,17 @@ def map_points(
     mode: EPxIntMapping,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Map target-world points to reference coordinates for one frame."""
-    if frame < 0 or frame >= mesh.displacement.shape[0]:
-        raise IndexError("frame is outside the displacement series.")
+    if mesh.displacements is None:
+        if frame != 0:
+            raise IndexError("frame is outside the displacement series.")
+        deformed = mesh.coords
+    else:
+        if frame < 0 or frame >= mesh.displacements.shape[0]:
+            raise IndexError("frame is outside the displacement series.")
+        deformed = mesh.coords + mesh.displacements[frame]
 
     x_coord = np.asarray(query_x, dtype=np.float64).ravel()
     y_coord = np.asarray(query_y, dtype=np.float64).ravel()
-    deformed = mesh.coords + mesh.displacement[frame]
 
     if mode is EPxIntMapping.AFFINE:
         return _affine(mesh, deformed, x_coord, y_coord)
@@ -85,10 +90,10 @@ def _vtk(
     nodes = mesh.connectivity.shape[1]
     cells = np.hstack(
         (
-            np.full((len(mesh.connectivity), 1), nodes, dtype=np.intp),
-            mesh.connectivity,
+            np.full((len(mesh.connectivity), 1), nodes, dtype=np.int64),
+            np.asarray(mesh.connectivity, dtype=np.int64),
         )
-    ).ravel()
+    ).ravel().astype(np.int64)
 
     grid = pv.UnstructuredGrid(
         cells,

@@ -76,11 +76,9 @@ class PixIntGrid2D(IImageWarp2D):
         if convention_issues:
             raise ValueError(convention_issues[0].message)
 
-        if (
-            not np.isfinite(mesh.coords).all()
-            or not np.isfinite(
-                mesh.displacement,
-            ).all()
+        if not np.isfinite(mesh.coords).all() or (
+            mesh.displacements is not None
+            and not np.isfinite(mesh.displacements).all()
         ):
             raise ValueError(
                 "mesh coordinates and displacements must be finite.",
@@ -121,7 +119,10 @@ class PixIntGrid2D(IImageWarp2D):
         images: list[np.ndarray] = []
         masks: list[np.ndarray] = []
 
-        for frame in range(mesh.displacement.shape[0]):
+        num_frames = (
+            1 if mesh.displacements is None else mesh.displacements.shape[0]
+        )
+        for frame in range(num_frames):
             image, mask = self._render_frame(mesh, camera, frame)
             images.append(image)
             masks.append(mask)

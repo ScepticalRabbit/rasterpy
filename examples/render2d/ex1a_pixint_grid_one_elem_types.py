@@ -10,7 +10,7 @@ from pathlib import Path
 
 import numpy as np
 
-import pyvale.render as render
+import rasterpy as render
 
 
 def make_mesh(element_type: render.EElementType) -> render.Mesh2D:

@@ -12,7 +12,7 @@ from pathlib import Path
 
 import numpy as np
 
-import pyvale.render as render
+import rasterpy as render
 
 
 camera = render.Camera2D(

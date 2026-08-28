@@ -4,25 +4,30 @@
 # License: MIT
 # Copyright (C) 2026 Sceptical Rabbit (Lloyd Fletcher)
 #===============================================================================
+from dataclasses import dataclass
 import numpy as np
-from .camera import CameraData
-from .mesh import RenderMesh
+from .camera import Camera2D, CameraData
+from .mesh import Mesh2D, RenderMesh
 
-#===============================================================================
-# TODO
-# - How do we match render fields between meshes?
-# - How do we check displacement fields are the same between meshes?
-# - Eventually this will need to take render times and do the field interpolations
-# - Check all render meshes to see if any are deformable
+
+@dataclass(slots=True)
+class Scene2D:
+    """Complete scene description for planar 2D image-warp renderers."""
+
+    mesh: Mesh2D
+    camera: Camera2D
+    source_image: np.ndarray | None = None
+    mask: np.ndarray | None = None
 
 
 class RenderScene:
-    __slots__ = ("cameras","meshes")
+    __slots__ = ("cameras", "meshes")
 
-    def __init__(self,
-                 cameras: list[CameraData] | None = None,
-                 meshes: list[RenderMesh] | None = None,
-                 ) -> None:
+    def __init__(
+        self,
+        cameras: list[CameraData] | None = None,
+        meshes: list[RenderMesh] | None = None,
+    ) -> None:
         if cameras is None:
             self.cameras = []
         else:
@@ -40,14 +45,15 @@ class RenderScene:
 
         return False
 
+
 def get_all_coords_world(meshes: list[RenderMesh]) -> np.ndarray:
     coords_all = []
     for mm in meshes:
-        coords_all.append(np.matmul(mm.coords,mm.mesh_to_world_mat.T))
+        coords_all.append(np.matmul(mm.coords, mm.mesh_to_world_mat.T))
 
     return np.vstack(coords_all)
 
 
 Scene = RenderScene
 
-__all__ = ["RenderScene", "Scene", "get_all_coords_world"]
+__all__ = ["RenderScene", "Scene", "Scene2D", "get_all_coords_world"]

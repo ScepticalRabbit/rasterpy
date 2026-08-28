@@ -60,6 +60,65 @@ class Mesh:
         self._build_transform_mats()
 
 
-RenderMesh = Mesh
+from enum import Enum
 
-__all__ = ["Mesh", "RenderMesh"]
+
+class EElementType(str, Enum):
+    """Finite-element topology identifiers."""
+
+    TRI3 = "tri3"
+    TRI6 = "tri6"
+    QUAD4 = "quad4"
+    QUAD8 = "quad8"
+    QUAD9 = "quad9"
+
+
+class Mesh2D:
+    """A planar 2D finite-element mesh representation."""
+
+    __slots__ = ("element_type", "coords", "connectivity", "_displacements")
+
+    def __init__(
+        self,
+        element_type: EElementType,
+        coords: np.ndarray,
+        connectivity: np.ndarray,
+        displacements: np.ndarray | None = None,
+        displacement: np.ndarray | None = None,
+    ) -> None:
+        self.element_type = element_type
+        self.coords = np.ascontiguousarray(coords, dtype=np.float64)
+        self.connectivity = np.ascontiguousarray(connectivity, dtype=np.uintp)
+        if displacements is None and displacement is not None:
+            displacements = displacement
+        self._displacements = (
+            None
+            if displacements is None
+            else np.ascontiguousarray(displacements, dtype=np.float64)
+        )
+
+    @property
+    def displacements(self) -> np.ndarray | None:
+        return self._displacements
+
+    @displacements.setter
+    def displacements(self, val: np.ndarray | None) -> None:
+        self._displacements = (
+            None if val is None else np.ascontiguousarray(val, dtype=np.float64)
+        )
+
+    @property
+    def displacement(self) -> np.ndarray | None:
+        return self._displacements
+
+    @displacement.setter
+    def displacement(self, val: np.ndarray | None) -> None:
+        self._displacements = (
+            None if val is None else np.ascontiguousarray(val, dtype=np.float64)
+        )
+
+
+RenderMesh = Mesh
+Mesh3D = Mesh
+
+__all__ = ["EElementType", "Mesh", "Mesh2D", "Mesh3D", "RenderMesh"]

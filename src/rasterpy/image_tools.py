@@ -78,4 +78,14 @@ def _image_to_uint(image: np.ndarray, bits: int) -> np.ndarray:
     return image.astype(np.uint16)
 
 
-__all__ = ["EImageType", "ImageTools"]
+def image_save(path: Path | str, image: np.ndarray) -> None:
+    """Save an image array to disk in standard orientation."""
+    save_path = Path(path)
+    save_path.parent.mkdir(parents=True, exist_ok=True)
+    arr = np.asarray(image)
+    if arr.ndim == 3 and arr.shape[2] == 1:
+        arr = arr[:, :, 0]
+    Image.fromarray(arr[::-1, :]).save(save_path)
+
+
+__all__ = ["EImageType", "ImageTools", "image_save"]
