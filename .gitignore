@@ -1,5 +1,12 @@
 *.tiff
+*.bmp
+*.npy
+.*/
+plans/
+refs/
+out/
 
+#---------------------------------------------------------------------------------------
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

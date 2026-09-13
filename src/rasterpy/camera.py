@@ -1,11 +1,12 @@
-# ============================================================================== 
+# ==============================================================================
 # rasterpy: legacy DIC scalar-field rasterisers
 # License: MIT
 # Copyright (C) 2026 Sceptical Rabbit (Lloyd Fletcher)
-# ============================================================================== 
+# ==============================================================================
 """Perspective camera data used by the legacy rasterisers."""
 
 from dataclasses import dataclass, field
+from typing import Any
 
 import numpy as np
 from scipy.spatial.transform import Rotation
@@ -35,9 +36,13 @@ class Camera:
         self.pixels_size = np.asarray(self.pixels_size, dtype=np.float64)
         self.pos_world = np.asarray(self.pos_world, dtype=np.float64)
         self.roi_cent_world = np.asarray(self.roi_cent_world, dtype=np.float64)
-        self.image_dist = float(np.linalg.norm(self.pos_world - self.roi_cent_world))
+        self.image_dist = float(
+            np.linalg.norm(self.pos_world - self.roi_cent_world)
+        )
         self.sensor_size = self.pixels_num * self.pixels_size
-        self.image_dims = self.image_dist * self.sensor_size / self.focal_length
+        self.image_dims = (
+            self.image_dist * self.sensor_size / self.focal_length
+        )
         self.cam_to_world_mat = np.zeros((4, 4), dtype=np.float64)
         self.cam_to_world_mat[0:3, 0:3] = self.rot_world.as_matrix()
         self.cam_to_world_mat[-1, -1] = 1.0
@@ -64,6 +69,9 @@ class Camera2D:
     sample_times: np.ndarray | None = None
     angle: Rotation | None = None
     subsample: int = 1
+    distortion: Any | None = None
+    focal_length: float | None = None
+    focal_length_px: float = field(init=False)
     field_of_view: np.ndarray = field(init=False)
     dynamic_range: int = field(init=False)
     background_code: float = field(init=False)
@@ -74,6 +82,11 @@ class Camera2D:
         """Normalise arrays and calculate derived camera quantities."""
         self.pixels_num = np.asarray(self.pixels_num, dtype=np.int32)
         self.roi_cent_world = np.asarray(self.roi_cent_world, dtype=np.float64)
+        if self.focal_length is not None:
+            self.focal_length_px = self.focal_length / self.pixels_size
+        else:
+            self.focal_length_px = float(self.pixels_num[0])
+
         self.field_of_view = self.pixels_size * self.pixels_num.astype(
             np.float64
         )
@@ -81,6 +94,28 @@ class Camera2D:
         self.background_code = self.background * float(self.dynamic_range)
         self.world_to_cam = self.field_of_view / 2.0 - self.roi_cent_world[:2]
         self.cam_to_world = -self.world_to_cam
+
+    def unproject_points(
+        self,
+        query_x: np.ndarray,
+        query_y: np.ndarray,
+    ) -> tuple[np.ndarray, np.ndarray]:
+        """Map observed camera query points to ideal world coordinates."""
+        if self.distortion is None:
+            return query_x, query_y
+
+        focal_unit = self.focal_length_px * self.pixels_size
+        dx_phys = query_x - self.roi_cent_world[0]
+        dy_phys = query_y - self.roi_cent_world[1]
+
+        x_dist = dx_phys / focal_unit
+        y_dist = dy_phys / focal_unit
+
+        x_ideal, y_ideal = self.distortion.inverse(x_dist, y_dist)
+
+        ideal_x = self.roi_cent_world[0] + x_ideal * focal_unit
+        ideal_y = self.roi_cent_world[1] + y_ideal * focal_unit
+        return ideal_x, ideal_y
 
 
 __all__ = ["Camera", "Camera2D", "CameraData"]

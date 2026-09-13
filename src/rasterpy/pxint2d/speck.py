@@ -170,7 +170,7 @@ class PixIntSpeck2D(IImageWarp2D):
     capabilities = RenderCapabilities(
         element_types=frozenset(EElementType),
         supports_lights=False,
-        supports_camera_distortion=False,
+        supports_camera_distortion=True,
         supports_psf=True,
     )
 
@@ -280,6 +280,7 @@ class PixIntSpeck2D(IImageWarp2D):
 
         query_x = (x_origin[:, None] + pixel_x * quad_x).ravel()
         query_y = (y_origin[:, None] + pixel_y * quad_y).ravel()
+        query_x, query_y = camera.unproject_points(query_x, query_y)
         reference_x, reference_y, valid = map_points(
             mesh,
             frame,
