@@ -87,6 +87,12 @@ def render_preset(preset: BCExtPreset) -> tuple[np.ndarray, np.ndarray]:
         distortion_k6=preset.k6,
         distortion_p1=preset.p1,
         distortion_p2=preset.p2,
+        distortion_s1=preset.s1,
+        distortion_s2=preset.s2,
+        distortion_s3=preset.s3,
+        distortion_s4=preset.s4,
+        distortion_tau_x=preset.tau_x,
+        distortion_tau_y=preset.tau_y,
     )
 
     config = riley.create_raster_config(

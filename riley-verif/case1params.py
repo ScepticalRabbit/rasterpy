@@ -34,30 +34,36 @@ class BCPreset:
 
 BC_PRESETS: list[BCPreset] = [
     BCPreset(
-        name="mild_barrel",
-        description="Mild barrel radial distortion",
-        k1=-0.05,
-        k2=0.01,
+        name="light_barrel",
+        description="Light barrel radial distortion",
+        k1=-0.3,
+        k2=0.5,
     ),
     BCPreset(
-        name="mild_pincushion",
-        description="Mild pincushion radial distortion",
-        k1=0.05,
-        k2=-0.01,
+        name="extreme_barrel",
+        description="Extreme barrel radial distortion",
+        k1=-2.5,
+        k2=8.0,
     ),
     BCPreset(
-        name="strong_barrel",
-        description="Strong barrel radial distortion",
-        k1=-0.15,
-        k2=0.03,
+        name="light_pincushion",
+        description="Light pincushion radial distortion",
+        k1=0.3,
+        k2=-0.5,
+    ),
+    BCPreset(
+        name="extreme_pincushion",
+        description="Extreme pincushion radial distortion",
+        k1=2.5,
+        k2=-5.0,
     ),
     BCPreset(
         name="mixed_asymmetric",
         description="Radial barrel with asymmetric tangential distortion",
-        k1=-0.08,
-        k2=0.015,
-        p1=1.0e-3,
-        p2=-1.0e-3,
+        k1=-0.8,
+        k2=1.5,
+        p1=3.0e-3,
+        p2=-3.0e-3,
     ),
 ]
 

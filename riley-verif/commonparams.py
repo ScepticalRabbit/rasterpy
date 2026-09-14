@@ -48,7 +48,7 @@ OUTPUT_ROOT: Path = PROJECT_ROOT / "out"
 
 
 def create_planar_mesh_quad4(
-    margin: float = 100.0,
+    margin: float = 150.0,
 ) -> tuple[np.ndarray, np.ndarray]:
     """Create a planar Quad4 mesh enclosing the camera field of view.
 
@@ -56,7 +56,7 @@ def create_planar_mesh_quad4(
     ----------
     margin : float, optional
         Extra extent beyond camera view limits in world units (pixels).
-        Default is 100.0.
+        Default is 150.0.
 
     Returns
     -------
@@ -89,16 +89,16 @@ def plot_comparison(
     output_path: Path,
     is_float: bool = True,
 ) -> None:
-    """Generate and save a 3-panel comparison figure."""
+    """Generate and save a 3-panel comparison figure with clear spacing."""
     max_diff: float = float(np.max(np.abs(diff)))
     mean_diff: float = float(np.mean(np.abs(diff)))
 
-    fig, axes = plt.subplots(1, 3, figsize=(15, 4.5), constrained_layout=True)
+    fig, axes = plt.subplots(1, 3, figsize=(16, 4.8))
 
     if is_float:
         vmin, vmax = 0.0, 1.0
         diff_cmap = "inferno"
-        diff_label = "Abs Difference (Float)"
+        diff_label = "Abs Diff (Float)"
         title = (
             f"{title_prefix} Comparison (Float: [0, 1])\n"
             f"Max Diff = {max_diff:.3e}, Mean Diff = {mean_diff:.3e}"
@@ -106,44 +106,48 @@ def plot_comparison(
     else:
         vmin, vmax = 0, 255
         diff_cmap = "magma"
-        diff_label = "Abs Difference (Grey Level)"
+        diff_label = "Abs Diff (Grey Level)"
         title = (
             f"{title_prefix} Comparison (8-bit UInt8)\n"
             f"Max Diff = {int(round(max_diff))} GL, "
             f"Mean Diff = {mean_diff:.3e} GL"
         )
 
-    fig.suptitle(title, fontsize=13, fontweight="bold")
+    fig.suptitle(title, fontsize=12, fontweight="bold", y=0.98)
 
     im0 = axes[0].imshow(
         img_gridint2d, cmap="gray", vmin=vmin, vmax=vmax, origin="lower"
     )
-    axes[0].set_title("GridInt2D (PxInt2D)", fontsize=11)
-    axes[0].set_xlabel("Pixel X")
-    axes[0].set_ylabel("Pixel Y")
+    axes[0].set_title("GridInt2D (PxInt2D)", fontsize=11, pad=8)
+    axes[0].set_xlabel("Pixel X", fontsize=10)
+    axes[0].set_ylabel("Pixel Y", fontsize=10)
     divider0 = make_axes_locatable(axes[0])
-    cax0 = divider0.append_axes("right", size="5%", pad=0.08)
+    cax0 = divider0.append_axes("right", size="5%", pad=0.10)
     fig.colorbar(im0, cax=cax0)
 
     im1 = axes[1].imshow(
         img_riley, cmap="gray", vmin=vmin, vmax=vmax, origin="lower"
     )
-    axes[1].set_title("Riley Reference", fontsize=11)
-    axes[1].set_xlabel("Pixel X")
-    axes[1].set_ylabel("Pixel Y")
+    axes[1].set_title("Riley Reference", fontsize=11, pad=8)
+    axes[1].set_xlabel("Pixel X", fontsize=10)
+    axes[1].set_ylabel("Pixel Y", fontsize=10)
     divider1 = make_axes_locatable(axes[1])
-    cax1 = divider1.append_axes("right", size="5%", pad=0.08)
+    cax1 = divider1.append_axes("right", size="5%", pad=0.10)
     fig.colorbar(im1, cax=cax1)
 
     im2 = axes[2].imshow(diff, cmap=diff_cmap, origin="lower")
-    axes[2].set_title("Absolute Difference", fontsize=11)
-    axes[2].set_xlabel("Pixel X")
-    axes[2].set_ylabel("Pixel Y")
+    axes[2].set_title("Absolute Difference", fontsize=11, pad=8)
+    axes[2].set_xlabel("Pixel X", fontsize=10)
+    axes[2].set_ylabel("Pixel Y", fontsize=10)
     divider2 = make_axes_locatable(axes[2])
-    cax2 = divider2.append_axes("right", size="5%", pad=0.08)
+    cax2 = divider2.append_axes("right", size="5%", pad=0.10)
     cbar2 = fig.colorbar(im2, cax=cax2)
-    cbar2.set_label(diff_label)
+    cbar2.set_label(diff_label, fontsize=10, labelpad=8)
+
+    fig.subplots_adjust(
+        left=0.06, right=0.94, bottom=0.12, top=0.85, wspace=0.35
+    )
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(output_path, dpi=200)
+    fig.savefig(output_path, dpi=200, bbox_inches="tight")
     plt.close(fig)

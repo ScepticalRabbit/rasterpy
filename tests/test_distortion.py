@@ -183,6 +183,59 @@ def test_brown_conrady_ext_matches_opencv_oracle(
     )
 
 
+@pytest.mark.parametrize(
+    "s1, s2, s3, s4, tau_x, tau_y",
+    [
+        (0.001, -0.0005, 0.0008, -0.0002, 0.0, 0.0),
+        (0.0, 0.0, 0.0, 0.0, 0.02, -0.015),
+        (0.0015, -0.0008, 0.001, -0.0004, 0.01, -0.01),
+    ],
+)
+def test_brown_conrady_ext_prism_and_tilt_opencv(
+    s1: float,
+    s2: float,
+    s3: float,
+    s4: float,
+    tau_x: float,
+    tau_y: float,
+) -> None:
+    """Verify thin prism and sensor tilt against OpenCV 14-parameter oracle."""
+    k1, k2, p1, p2 = -0.05, 0.01, 0.001, -0.001
+    k4, k5 = 0.02, -0.005
+    model = BrownConradyExt(
+        k1=k1, k2=k2, p1=p1, p2=p2, k4=k4, k5=k5,
+        s1=s1, s2=s2, s3=s3, s4=s4,
+        tau_x=tau_x, tau_y=tau_y,
+    )
+
+    grid_x, grid_y = np.meshgrid(
+        np.linspace(-0.25, 0.25, 7),
+        np.linspace(-0.2, 0.2, 7),
+    )
+    x_flat = grid_x.ravel()
+    y_flat = grid_y.ravel()
+
+    actual_xd, actual_yd = model.forward(x_flat, y_flat)
+
+    # OpenCV 14-parameter vector
+    dist_coeffs = np.array(
+        [
+            k1, k2, p1, p2, 0.0, k4, k5, 0.0,
+            s1, s2, s3, s4, tau_x, tau_y,
+        ],
+        dtype=np.float64,
+    )
+    pts_2d = np.column_stack((x_flat, y_flat))
+    expected = _eval_cv2_project_points(pts_2d, dist_coeffs)
+
+    np.testing.assert_allclose(
+        actual_xd, expected[:, 0], atol=1.0e-15, rtol=1.0e-14,
+    )
+    np.testing.assert_allclose(
+        actual_yd, expected[:, 1], atol=1.0e-15, rtol=1.0e-14,
+    )
+
+
 # ------------------------------------------------------------------------------
 # Test Cases for Polynomial Models vs NumPy Oracle
 # ------------------------------------------------------------------------------

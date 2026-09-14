@@ -33,42 +33,90 @@ class BCExtPreset:
     k6: float = 0.0
     p1: float = 0.0
     p2: float = 0.0
+    s1: float = 0.0
+    s2: float = 0.0
+    s3: float = 0.0
+    s4: float = 0.0
+    tau_x: float = 0.0
+    tau_y: float = 0.0
 
 
 BCEXT_PRESETS: list[BCExtPreset] = [
     BCExtPreset(
-        name="mild_ext",
-        description="Extended rational model with numerator & denominator",
-        k1=-0.05,
-        k2=0.01,
-        k3=0.0,
-        k4=0.02,
-        k5=-0.005,
-        k6=0.0,
+        name="light_barrel_ext",
+        description="Light barrel distortion with rational terms",
+        k1=-0.3,
+        k2=0.5,
+        k4=0.1,
+        k5=-0.05,
     ),
     BCExtPreset(
-        name="asymmetric_ext",
-        description="Extended rational model with tangential distortion",
-        k1=-0.05,
-        k2=0.01,
-        k3=0.0,
-        k4=0.02,
-        k5=-0.005,
-        k6=0.0,
-        p1=1.0e-3,
-        p2=-1.0e-3,
+        name="extreme_barrel_ext",
+        description="Extreme barrel distortion with rational terms",
+        k1=-2.5,
+        k2=8.0,
+        k4=0.5,
+        k5=-0.2,
     ),
     BCExtPreset(
-        name="rational_higher_order",
-        description="Full 8-parameter rational model with k1..k6 and p1..p2",
-        k1=-0.08,
-        k2=0.02,
-        k3=-0.001,
-        k4=0.03,
-        k5=-0.01,
-        k6=0.001,
-        p1=5.0e-4,
-        p2=-5.0e-4,
+        name="light_pincushion_ext",
+        description="Light pincushion distortion with rational terms",
+        k1=0.3,
+        k2=-0.5,
+        k4=-0.1,
+        k5=0.05,
+    ),
+    BCExtPreset(
+        name="extreme_pincushion_ext",
+        description="Extreme pincushion distortion with rational terms",
+        k1=2.5,
+        k2=-5.0,
+        k4=-0.5,
+        k5=0.2,
+    ),
+    BCExtPreset(
+        name="light_prism",
+        description="Light thin prism distortion",
+        s1=0.05,
+        s2=-0.08,
+        s3=0.03,
+        s4=-0.05,
+    ),
+    BCExtPreset(
+        name="extreme_prism",
+        description="Extreme thin prism distortion",
+        s1=0.4,
+        s2=-0.8,
+        s3=0.3,
+        s4=-0.5,
+    ),
+    BCExtPreset(
+        name="light_tilt",
+        description="Light sensor tilt distortion",
+        tau_x=0.05,
+        tau_y=-0.04,
+    ),
+    BCExtPreset(
+        name="extreme_tilt",
+        description="Extreme sensor tilt distortion",
+        tau_x=0.25,
+        tau_y=-0.20,
+    ),
+    BCExtPreset(
+        name="combined_extreme_all",
+        description="Combined extreme rational, tangential, prism, and tilt",
+        k1=-2.5,
+        k2=8.0,
+        k4=0.5,
+        k5=-0.2,
+        p1=3.0e-3,
+        p2=-3.0e-3,
+        s1=0.4,
+        s2=-0.8,
+        s3=0.3,
+        s4=-0.5,
+        tau_x=0.25,
+        tau_y=-0.20,
     ),
 ]
 

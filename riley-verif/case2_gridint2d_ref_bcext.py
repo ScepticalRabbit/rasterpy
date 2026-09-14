@@ -52,6 +52,12 @@ def render_preset(preset: BCExtPreset) -> tuple[np.ndarray, np.ndarray]:
         k6=preset.k6,
         p1=preset.p1,
         p2=preset.p2,
+        s1=preset.s1,
+        s2=preset.s2,
+        s3=preset.s3,
+        s4=preset.s4,
+        tau_x=preset.tau_x,
+        tau_y=preset.tau_y,
     )
 
     camera_2d = rp.Camera2D(

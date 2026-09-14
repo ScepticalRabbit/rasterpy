@@ -35,6 +35,12 @@ class CompoundPreset:
     k6: float = 0.0
     p1: float = 0.0
     p2: float = 0.0
+    s1: float = 0.0
+    s2: float = 0.0
+    s3: float = 0.0
+    s4: float = 0.0
+    tau_x: float = 0.0
+    tau_y: float = 0.0
     poly_order: EPolynomialOrder = EPolynomialOrder.QUADRATIC
     poly_coeffs_u: tuple[float, ...] = (0.0,) * 10
     poly_coeffs_v: tuple[float, ...] = (0.0,) * 10
@@ -43,12 +49,12 @@ class CompoundPreset:
 COMPOUND_PRESETS: list[CompoundPreset] = [
     CompoundPreset(
         name="bc_poly_quadratic",
-        description="Standard Brown-Conrady cascaded with quadratic polynomial",
+        description="Brown-Conrady cascaded with quadratic polynomial",
         is_ext=False,
-        k1=-0.05,
-        k2=0.01,
-        p1=1.0e-3,
-        p2=-1.0e-3,
+        k1=-0.3,
+        k2=0.5,
+        p1=2.0e-3,
+        p2=-2.0e-3,
         poly_order=EPolynomialOrder.QUADRATIC,
         poly_coeffs_u=(0.0, 0.01, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0),
         poly_coeffs_v=(0.0, 0.0, -0.01, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0),
@@ -57,24 +63,46 @@ COMPOUND_PRESETS: list[CompoundPreset] = [
         name="bcext_poly_quadratic",
         description="Extended Brown-Conrady cascaded with quadratic polynomial",
         is_ext=True,
-        k1=-0.05,
-        k2=0.01,
-        k4=0.02,
-        k5=-0.005,
-        p1=1.0e-3,
-        p2=-1.0e-3,
+        k1=-0.3,
+        k2=0.5,
+        k4=0.1,
+        k5=-0.05,
+        p1=2.0e-3,
+        p2=-2.0e-3,
         poly_order=EPolynomialOrder.QUADRATIC,
         poly_coeffs_u=(0.0, 0.01, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0),
         poly_coeffs_v=(0.0, 0.0, -0.01, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0),
     ),
     CompoundPreset(
         name="bc_poly_cubic",
-        description="Standard Brown-Conrady cascaded with cubic polynomial",
+        description="Brown-Conrady cascaded with cubic polynomial",
         is_ext=False,
-        k1=-0.05,
-        k2=0.01,
-        p1=1.0e-3,
-        p2=-1.0e-3,
+        k1=-0.3,
+        k2=0.5,
+        p1=2.0e-3,
+        p2=-2.0e-3,
+        poly_order=EPolynomialOrder.CUBIC,
+        poly_coeffs_u=(0.0, 0.01, 0.0, 0.0, 0.5, 0.0, 2.0, 0.0, 0.0, 0.0),
+        poly_coeffs_v=(0.0, 0.0, -0.01, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, -2.0),
+    ),
+    CompoundPreset(
+        name="bcext_poly_extreme",
+        description=(
+            "Extended Brown-Conrady (with prism & tilt) and cubic polynomial"
+        ),
+        is_ext=True,
+        k1=-1.5,
+        k2=4.0,
+        k4=0.3,
+        k5=-0.1,
+        p1=2.0e-3,
+        p2=-2.0e-3,
+        s1=0.2,
+        s2=-0.4,
+        s3=0.15,
+        s4=-0.25,
+        tau_x=0.15,
+        tau_y=-0.12,
         poly_order=EPolynomialOrder.CUBIC,
         poly_coeffs_u=(0.0, 0.01, 0.0, 0.0, 0.5, 0.0, 2.0, 0.0, 0.0, 0.0),
         poly_coeffs_v=(0.0, 0.0, -0.01, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, -2.0),

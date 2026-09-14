@@ -5,7 +5,7 @@
     "distutils": {
         "depends": [],
         "include_dirs": [
-            "/home/lloydf/.cache/uv/builds-v0/.tmpbCf5A1/lib/python3.13/site-packages/numpy/_core/include"
+            "/home/lloydf/.cache/uv/builds-v0/.tmpAxaR1O/lib/python3.13/site-packages/numpy/_core/include"
         ],
         "name": "rasterpy.cython.rastercyth",
         "sources": [
